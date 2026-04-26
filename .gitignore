@@ -1,0 +1,46 @@
+# dependencies
+node_modules/
+
+# Expo
+Mobile/.expo/
+Mobile/dist/
+Mobile/web-build/
+Mobile/expo-env.d.ts
+
+# Native
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# env files
+.env
+.env.local
+.env.*.local
+Backend/.env
+
+# Backend specific
+Backend/logs
+Backend/pids
+Backend/lib-cov
+Backend/coverage
+Backend/.nyc_output
+Backend/.grunt
+Backend/bower_components
+Backend/node_modules/
+
+# Mobile specific
+Mobile/node_modules/
+Mobile/ios/
+Mobile/android/
+Mobile/app-example/
