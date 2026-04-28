@@ -1,35 +1,68 @@
 import { io, Socket } from 'socket.io-client'
 
-const SOCKET_URL = 'https://koda-app-k7u3.onrender.com'
+const SOCKET_URLS = [
+  'https://koda-app-k7u3.onrender.com',
+  'https://koda-app-985v.onrender.com',
+]
 
 class SocketService {
   private socket: Socket | null = null
+  private currentIndex = 0
+  private userId?: string
 
   connect(userId?: string) {
+    this.userId = userId
+
     if (this.socket?.connected) return
 
-    this.socket = io(SOCKET_URL, {
+    this.initSocket()
+  }
+
+  private initSocket() {
+    const url = SOCKET_URLS[this.currentIndex]
+
+    console.log('🔌 Trying:', url)
+
+    this.socket = io(url, {
       transports: ['websocket'],
       autoConnect: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 10,
+      reconnection: false, // ❗ important (we handle manually)
     })
 
     this.socket.on('connect', () => {
-      console.log('🔌 Connected to Socket.io server')
-      if (userId) {
-        this.socket?.emit('join_user', userId)
+      console.log('✅ Connected:', url)
+
+      if (this.userId) {
+        this.socket?.emit('join_user', this.userId)
       }
     })
 
     this.socket.on('disconnect', (reason) => {
-      console.log('🔌 Disconnected from Socket.io server:', reason)
+      console.log('❌ Disconnected:', reason)
+      this.tryNextServer()
     })
 
     this.socket.on('connect_error', (error) => {
-      console.log('🔌 Socket connection error:', error.message)
+      console.log('⚠️ Error:', error.message)
+      this.tryNextServer()
     })
+  }
+
+  private tryNextServer() {
+    if (this.socket) {
+      this.socket.removeAllListeners()
+      this.socket.close()
+      this.socket = null
+    }
+
+    // switch server
+    this.currentIndex = (this.currentIndex + 1) % SOCKET_URLS.length
+
+    console.log('🔁 Switching to backup server...')
+
+    setTimeout(() => {
+      this.initSocket()
+    }, 1000)
   }
 
   disconnect() {
@@ -52,7 +85,7 @@ class SocketService {
   }
 
   joinRoom(room: string) {
-    this.socket?.emit('join_room', room) // Backend doesn't have join_room yet, but good to have
+    this.socket?.emit('join_room', room)
   }
 
   getSocket() {
