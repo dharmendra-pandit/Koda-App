@@ -12,6 +12,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.koda.productivity.app",
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#2FA36B",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -19,7 +21,11 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "output": "static",
@@ -44,6 +50,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": false
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e4aab436-3e36-40d1-8627-3c2045cd83ff"
+      }
+    },
+    "owner": "panditji"
   }
 }
